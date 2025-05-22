@@ -39,7 +39,9 @@ models:
     example:
       +materialized: table
   trademe_property_analytics:
-    +materialized: view
     staging:
       +schema: staging
       +materialized: view
+    marts:
+      +schema: mart
+      +materialized: table
