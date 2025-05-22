@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw
+    database: property_analytics
+    schema: raw
+    tables:
+      - name: trademe_property_listings
