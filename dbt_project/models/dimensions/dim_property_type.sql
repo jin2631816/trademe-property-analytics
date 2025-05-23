@@ -4,9 +4,6 @@
 ) }}
 
 SELECT DISTINCT
-    regionid,
-    region,
-    suburbid,
-    suburb
+    property_type
 FROM {{ ref('stg_property_listings') }}
-WHERE region IS NOT NULL AND suburb IS NOT NULL
+WHERE property_type IS NOT NULL

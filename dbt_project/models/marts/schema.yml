@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: fact_listings
+    columns:
+      - name: regionid
+        tests:
+          - not_null
+      - name: property_type
+        tests:
+          - not_null
