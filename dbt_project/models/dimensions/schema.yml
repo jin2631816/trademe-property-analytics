@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: dim_region
+    description: "地区维度表，包含所有挂牌数据中出现过的 region 与 suburb 对"
+    columns:
+      - name: suburb
+        description: "子地区"
+        tests:
+          - not_null
+
+      - name: region
+        description: "主地区"
+        tests:
+          - not_null
