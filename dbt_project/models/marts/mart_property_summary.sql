@@ -1,27 +1,20 @@
-{{ config(
-    materialized='table',
-    schema='mart'
-) }}
+{{ config(materialized='table') }}
+
+WITH base AS (
+    SELECT
+        TO_DATE(inserted_at) AS snapshot_date,
+        suburb,
+        region,
+        TRY_CAST(REGEXP_REPLACE(price_display, '[^0-9]', '') AS INT) AS price
+    FROM {{ ref('stg_property_listings') }}
+    WHERE price_display IS NOT NULL
+)
 
 SELECT
-    listing_id,
-    category,
-    title,
-    TRY_CAST(REGEXP_REPLACE(price_display, '[^0-9]', '') AS INT) AS price,
-    start_price,
-    is_new,
-    regionid,
+    snapshot_date,
     region,
-    suburbid,
     suburb,
-    bedrooms ,
-    bathrooms ,
-    lounges ,
-    land_area ,
-    property_type,
-    geolocation_lat,
-    geolocation_lng ,
-    LISTING_GROUP,
-    INSERTED_AT
-FROM {{ ref('stg_property_listings') }}
-WHERE listing_id IS NOT NULL
+    COUNT(*) AS total_listings,
+    AVG(price) AS avg_listing_price
+FROM base
+GROUP BY 1, 2, 3
