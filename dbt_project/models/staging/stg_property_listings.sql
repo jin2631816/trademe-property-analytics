@@ -2,28 +2,46 @@
 
 WITH source_data AS (
     SELECT 
-        listing_id,
-        title,
-        price_display,
-        suburb,
-        region,
-        bedrooms,
-        bathrooms,
-        land_area,
-        listing_date,
-        inserted_at
+	CATEGORY ,
+	REGIONID ,
+	SUBURBID ,
+	BATHROOMS ,
+	BEDROOMS ,
+	GEOLOCATION_LAT ,
+	GEOLOCATION_LNG ,
+	IS_NEW ,
+	LAND_AREA ,
+	LISTING_GROUP ,
+	LISTING_ID ,
+	LOUNGES ,
+	PRICE_DISPLAY ,
+	PROPERTY_TYPE ,
+	REGION ,
+	START_PRICE ,
+	SUBURB,
+	TITLE ,
+	INSERTED_AT
     FROM {{ source('raw', 'trademe_property_listings') }}
 )
 
 SELECT
-    listing_id,
-    title,
-    price_display,
-    suburb,
-    region,
-    TRY_CAST(bedrooms AS INT) AS bedrooms,
-    TRY_CAST(bathrooms AS INT) AS bathrooms,
-    TRY_CAST(land_area AS DOUBLE) AS land_area,
-    listing_date,
-    inserted_at
+	CATEGORY ,
+	REGIONID ,
+	SUBURBID ,
+	BATHROOMS ,
+	BEDROOMS ,
+	GEOLOCATION_LAT ,
+	GEOLOCATION_LNG ,
+	IS_NEW ,
+	LAND_AREA ,
+	LISTING_GROUP ,
+	LISTING_ID ,
+	LOUNGES ,
+	PRICE_DISPLAY ,
+	PROPERTY_TYPE ,
+	REGION ,
+	START_PRICE ,
+	SUBURB,
+	TITLE ,
+	INSERTED_AT
 FROM source_data
