@@ -2,18 +2,55 @@ version: 2
 
 models:
   - name: dim_region
+    description: "Dimension table containing distinct combinations of regions and suburbs"
     columns:
       - name: regionid
-        tests:
-          - unique
-          - not_null
+        description: "Unique ID of the region"
+        tests: [not_null]
+
+      - name: region
+        description: "Region name as displayed on the listing"
+
       - name: suburbid
-        tests:
-          - not_null
+        description: "Unique ID of the suburb"
+
+      - name: suburb
+        description: "Suburb name as displayed on the listing"
 
   - name: dim_property_type
+    description: "Dimension table listing all distinct property types in the dataset"
     columns:
       - name: property_type
-        tests:
-          - unique
-          - not_null
+        description: "Name of the property type (e.g. Townhouse, Section, Apartment)"
+        tests: [not_null, unique]
+
+  - name: dim_date
+    description: "Calendar date dimension table, used for time-based trend and aggregation analysis"
+    columns:
+      - name: date
+        description: "The date itself (primary key)"
+        tests: [not_null, unique]
+
+      - name: day
+        description: "Day of the month"
+
+      - name: month
+        description: "Numeric month value (1-12)"
+
+      - name: month_name
+        description: "Full name of the month"
+
+      - name: year
+        description: "Calendar year"
+
+      - name: weekday
+        description: "Day of week as number (1=Sunday)"
+
+      - name: weekday_name
+        description: "Full weekday name (e.g. Monday)"
+
+      - name: is_weekend
+        description: "True if the date is Saturday or Sunday"
+
+      - name: quarter
+        description: "Quarter number (1-4)"

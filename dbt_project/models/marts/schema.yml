@@ -2,10 +2,67 @@ version: 2
 
 models:
   - name: fact_listings
+    description: "Fact table containing property listing snapshots with location, pricing, and structural attributes"
     columns:
+      - name: listing_id
+        description: "Unique identifier for each property listing"
+        tests: [not_null, unique]
+
+      - name: snapshot_time
+        description: "Exact timestamp when the listing was fetched from the Trade Me API"
+
+      - name: snapshot_date
+        description: "Date of snapshot used for daily trend aggregation"
+
+      - name: category
+        description: "Listing category"
+
+      - name: title
+        description: "Listing title shown on the website"
+
+      - name: price_display
+        description: "Display price string (e.g. 'Negotiation', 'Deadline Sale')"
+
+      - name: start_price
+        description: "Numerical value of starting price if available"
+
+      - name: is_new
+        description: "Boolean flag indicating whether the listing is marked as 'new'"
+
       - name: regionid
-        tests:
-          - not_null
+        description: "Numeric ID of the region"
+        tests: [not_null]
+
+      - name: region
+        description: "Name of the region"
+
+      - name: suburbid
+        description: "Numeric ID of the suburb"
+
+      - name: suburb
+        description: "Name of the suburb"
+
+      - name: bedrooms
+        description: "Number of bedrooms"
+
+      - name: bathrooms
+        description: "Number of bathrooms"
+
+      - name: lounges
+        description: "Number of lounges or living rooms"
+
+      - name: land_area
+        description: "Size of land area in square meters"
+
       - name: property_type
-        tests:
-          - not_null
+        description: "Type of property (e.g. Apartment, House, Section)"
+        tests: [not_null]
+
+      - name: lat
+        description: "Geographical latitude of the listing"
+
+      - name: lng
+        description: "Geographical longitude of the listing"
+
+      - name: listing_date
+        description: "Trade Me listing group label (e.g. 'Deadline Sale', 'Auction')"
