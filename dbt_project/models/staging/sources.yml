@@ -1,8 +1,28 @@
 version: 2
 
 sources:
-  - name: raw
-    database: property_analytics
-    schema: tm_raw
+  - name: tm_raw 
+    description: "Raw data loaded from TradeMe API via PySpark into Snowflake."
+    database: PROPERTY_ANALYTICS 
+    schema: TM_RAW 
     tables:
-      - name: trademe_property_listings
+      - name: TRADEME_PROPERTY_LISTINGS_FULL
+        description: "Raw property listings data from TradeMe. Contains all fields from API, appended daily."
+        loaded_at_field: etl_inserted_at_utc # 可选：告诉 dbt 哪个字段代表加载时间，用于 source freshness
+        # freshnss: # 可选：定义源数据新鲜度检查
+        #   warn_after: {count: 12, period: hour}
+        #   error_after: {count: 24, period: hour}
+        columns:
+          - name: ListingId 
+            description: "The unique identifier for the listing."
+            tests:
+              - not_null # 假设 ListingId 不应为空
+              # - unique # 在原始 append 表中 ListingId 不会是唯一的，因为有历史记录
+          - name: AsAt 
+            description: "Timestamp string from API indicating when the data was snapshotted by TradeMe or fetched."
+          - name: etl_inserted_at_utc 
+            description: "Timestamp when the record was inserted into the raw table by the ETL process."
+            tests:
+              - not_null
+          # 你可以在这里为源表中的其他重要原始列添加描述和基本测试
+          # 但通常更详细的列级测试和描述会在 staging model 的 schema.yml 中定义

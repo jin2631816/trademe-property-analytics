@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: stg_property_listings # 必须与你的 SQL 文件名匹配 (不含 .sql)
+    description: "Staged property listings data from TradeMe. Includes basic cleaning, renaming, and type casting. Each record represents a version of a listing as ingested."
+    config:
+      materialized: view # Staging models are often views for faster iteration, or incremental tables
+      # +schema: staging # 可选：如果你想把这个模型物化到 Snowflake 的 'staging' schema
+    columns:
+      - name: listing_id
+        description: "Unique identifier for the property listing."
+        tests:
+          - not_null 
+          # - unique # Not unique in staging if it contains all history from append-only raw table
+
+      - name: etl_inserted_at_utc
+        description: "Timestamp when the record was loaded into the raw source by PySpark."
+        tests:
+          - not_null
+
+      - name: as_at_timestamp
+        description: "The timestamp (UTC) indicating when the listing data was current, derived from API's AsAt field."
+
+      - name: start_timestamp
+        description: "The timestamp (UTC) when the listing started."
+
+      - name: end_timestamp
+        description: "The timestamp (UTC) when the listing ended or was scheduled to end."
+      
+      - name: property_sale_timestamp
+        description: "The timestamp (UTC) of the property sale, if available."
+
+      - name: bedrooms
+        description: "Number of bedrooms."
+        tests:
+          - dbt_utils.accepted_range: # Requires dbt_utils package
+              min_value: 0
+              # max_value: 10 # Set a reasonable max if you know it
+      
+      - name: bathrooms
+        description: "Number of bathrooms."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: latitude
+        description: "Latitude of the property."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -90
+              max_value: 90
+      
+      - name: longitude
+        description: "Longitude of the property."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -180
+              max_value: 180
+              
+      - name: agency_id
+        description: "Identifier for the real estate agency."
+        # tests:
+        #   - relationships: # If you create a dim_agencies later
+        #       to: ref('dim_agencies')
+        #       field: agency_id
+        #       severity: warn # Staging data might not be perfectly clean yet
+
+      # ... (为其他重要的列添加描述和测试) ...
+      # 例如：
+      # - name: property_type
+      #   tests:
+      #     - accepted_values:
+      #         values: ['House', 'Apartment', 'Unit', 'Townhouse', ...] # 根据实际值
+      # - name: region_name
+      #   tests:
+      #     - not_null
